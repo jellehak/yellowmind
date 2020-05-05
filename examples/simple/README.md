@@ -1,0 +1,1 @@
+This example loads the mnist dataset

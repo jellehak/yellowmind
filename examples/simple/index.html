@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+</head>
+
+<body>
+  <div id="app">
+    <v-app>
+      <v-content>
+        <v-container>
+          <h2>YellowMind Example</h2>
+          <!-- <webcnn-input-draw/> -->
+          <v-row>
+            <v-col>
+              <h2>Mind</h2>
+              <textarea rows="10" style="width:100%">{{mind}}</textarea>
+            </v-col>
+            <v-col>
+              <canvas ref="canvas" style="background:lightgrey" width="300" height="100"></canvas>
+
+              <v-btn v-if="!running" @click="start">Start</v-btn>
+              <v-btn v-if="!running" @click="step">Step</v-btn>
+              <v-btn v-else @click="stop">Stop</v-btn>
+              <v-btn @click="loadPretrained">Load pretrained</v-btn>
+              <!-- <v-btn @click="show">Show network</v-btn> -->
+            </v-col>
+            <v-col>
+              <input-draw @input="onInput"></input-draw>
+              <p>{{output.confidence}} % it's a {{output.guess}}</p>
+
+              <h2>Stats</h2>
+              <p>epoch: {{epoch}}</p>
+            </v-col>
+          </v-row>
+        </v-container>
+      </v-content>
+    </v-app>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  <script type="module">
+    import { createMind } from '/src/index.js'
+    import InputDraw from './InputDraw.js'
+
+    // Download yellowmind machine learning file
+    import mindData from '/datasets/mnist/mind.js'
+
+    const mind = createMind(mindData)
+    console.log(mind)
+
+    // Expose
+    window.mind = mind
+
+    new Vue({
+      components: {
+        InputDraw
+      },
+      el: '#app',
+      data: vm => ({
+        mind: mindData,
+        running: false,
+        epoch: 0,
+        output: {
+          confidence: 0,
+        guess: 0
+        }
+      }),
+      vuetify: new Vuetify(),
+      created() {
+        // Start requestAnimationFrame
+        // this.step()
+      },
+
+      methods: {
+        start() {
+          this.running = true
+          this.animate()
+        },
+        stop() {
+          this.running = false
+        },
+
+        animate() {
+          this.step()
+
+          // Keep running until..
+          if (this.running && this.epoch < 200) {
+            window.requestAnimationFrame(this.animate)
+          }
+        },
+
+        async step(timestamp) {
+          let { epoch } = this
+          this.epoch++
+
+          const debug = await mind.train()
+
+          // Debug
+          this.plotImages(debug)
+        },
+
+        async loadPretrained() {
+          await mind.loadPretrained()
+        },
+
+        plotImages({ images = [], labels = [] } = {}) {
+          const ctx = this.$refs.canvas.getContext('2d')
+          ctx.clearRect(0, 0, 300, 300)
+          images.forEach((image, index) => {
+            // Image
+            ctx.putImageData(image, index * 20, 0)
+          })
+          labels.forEach((text, index) => {
+            // Label
+            ctx.textAlign = 'center'
+            ctx.fillText(text, index * 20 + 10, 50)
+          })
+        },
+
+
+        /**
+         * Test 
+         */
+        async test($event = {}) {
+          // console.log($event)
+          const { drawingPaths, drawingDots, ctx_draw } = $event
+
+          const output = await mind.test({ paths: drawingPaths, dots: drawingDots, ctx: ctx_draw })
+
+          console.log(output)
+          this.output = output
+        },
+
+        onInput($event) {
+          this.latestEvent = $event
+          this.test($event)
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

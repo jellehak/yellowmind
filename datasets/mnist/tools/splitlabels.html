@@ -1,0 +1,28 @@
+<button onclick="download">Download</button>
+
+<script type="module">
+    function downloadObjectAsJson(exportObj, exportName = 'file') {
+        var dataStr = "data:text/jsoncharset=utf-8," + encodeURIComponent(JSON.stringify(exportObj))
+        var downloadAnchorNode = document.createElement('a')
+        downloadAnchorNode.setAttribute("href", dataStr)
+        downloadAnchorNode.setAttribute("download", `${exportName}.json`)
+        document.body.appendChild(downloadAnchorNode) // required for firefox
+        downloadAnchorNode.click()
+        downloadAnchorNode.remove()
+    }
+
+    async function download() {
+        const resp = await fetch("../src/mnist_digit_labels.json").then(elem => elem.json())
+        console.log(resp)
+
+        downloadObjectAsJson(resp.slice(0, 10000 - 1), "set1")
+        downloadObjectAsJson(resp.slice(10000, 20000 - 1), "set2")
+        downloadObjectAsJson(resp.slice(20000, 30000 - 1), "set3")
+        downloadObjectAsJson(resp.slice(30000, 40000 - 1), "set4")
+        downloadObjectAsJson(resp.slice(40000, 50000 - 1), "set5")
+    }
+
+    (async function main() {
+
+    })()
+</script>

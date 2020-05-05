@@ -1,0 +1,30 @@
+{
+  "name": "aquasim-global-app",
+  "version": "0.0.1",
+  "main": "dist/index.html",
+  "scripts": {
+    "start": "npm run serve",
+    "serve":"npx browser-sync ./ --watch",
+    "serve:directory":"npx browser-sync ./ --watch --directory",
+    "build": "npx vue-cli-service build --target lib --name yellowmind",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore ./"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "date-fns": "^2.12.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-loader": "^3.0.3",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "eslint-plugin-vue": "^6.1.2"
+  }
+}
