@@ -2,7 +2,7 @@
 > YellowMind is a machine learning library for running Convolutional Neural Network (CNN) in the browser or NodeJs.
 
 # Goal
-Make the training and running of Convolutional Neural Network (CNN) as easy as possible.
+Make training and running of Convolutional Neural Network (CNN) as easy as possible.
 
 # Big thanks
 - Most of the underlaying library is based on the great work of DenseInL2 https://github.com/DenseInL2/webcnn. This library has been extended to allow creating machine learning networks purely from JSON.
@@ -18,27 +18,7 @@ Make the training and running of Convolutional Neural Network (CNN) as easy as p
 - [ ] Combine and link networks
 
 # Installation
-
-## Embed as script
-<a href="/examples/usage-script.html" target="_blank">open in new window</a>
-
-```html
-<div class="container">
-    <p>embedded as script</p>
-    <div style="height:80vh; border:1px solid black;">
-        <div id="app">loading...</div>
-    </div>
-</div>
-
-<script>
-    window.$yellowmind = {
-        el: 'app'
-    }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.min.js"></script>
-<script src="../dist/index.js"></script>
-```
+TODO
 
 # How it works
 ## Input
